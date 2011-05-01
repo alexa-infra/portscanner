@@ -1,0 +1,15 @@
+# cmake project
+# socket wrapper
+# thread wrapper
+# threadpool ?
+# unit-test ?
+# data struct - port/timeout
+# open socket by using select
+# request port scan in main thread by cycle
+# output result to console
+# threading
+# sync access to resources (data, console)
+# update windows build
+# commandline parser
+# interupt signals/events ?
+# help, docs

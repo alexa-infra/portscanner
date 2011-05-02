@@ -35,8 +35,9 @@ if(WIN32)
         ${SRC_PATH}/mutex_win32.cpp
         ${SRC_PATH}/thread_win32.cpp
         ${SRC_PATH}/socket_win32.cpp
-        ${SRC_PATH}/stdint.h
+        ${SRC_PATH}/win32/stdint.h
     )
+    include_directories(${SRC_PATH}/win32)
 endif(WIN32)
 
 include_directories(

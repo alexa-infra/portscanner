@@ -1,6 +1,3 @@
-# cmake project
-# socket wrapper
-#* select
 # unit-test ?
 # data struct - port/timeout
 #* json reader

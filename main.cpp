@@ -5,7 +5,7 @@
 #include "thread.h"
 #include "mutex.h"
 
-const string host = "alexadotlife.com";
+const string host = "127.0.0.1";
 const u16 port_min = 1;
 const u16 port_max = 65000;
 const u32 timeout = 200;

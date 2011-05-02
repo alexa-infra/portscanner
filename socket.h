@@ -2,6 +2,7 @@
 
 #include "types.h"
 #if defined(OS_WIN)
+#   include <winsock2.h>
 #   include <windows.h>
 #endif
 
@@ -10,7 +11,7 @@
 namespace ext {
 
 #if defined(OS_WIN)
-    typedef HANDLE Handle;
+    typedef SOCKET Handle;
 #else
     typedef int Handle;
 #endif

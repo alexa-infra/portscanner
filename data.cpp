@@ -10,6 +10,7 @@ bool HostList::Parse(const string& filename) {
     file.open(filename.c_str(), std::ios::in );
     if (!file.is_open()) {
         std::cout << "file " << filename << " is not existed" << std::endl;
+        return false;
     }
     Json::Reader reader;
     Json::Value root;
@@ -91,7 +92,7 @@ bool Host::Parse(Json::Value& node) {
         std::cout << "\"port_timeout\" node should be an array" << std::endl;
         return false;
     }
-    for(int i=0; i<pt.size(); i++) {
+    for(u32 i=0; i<pt.size(); i++) {
         Json::Value portTimeout = pt[i];
         u32 port = portTimeout.get("port", 0).asUInt();
         if (port > 65535) {
@@ -125,14 +126,22 @@ JobList HostList::GenJobs() {
                 else
                 {
                     // intersection or inclusion
+#if defined(OS_WIN)
+                    AddRange(jobs, h, range_start, max(h.range_end, range_end));
+#else
                     AddRange(jobs, h, range_start, std::max(h.range_end, range_end));
+#endif
                 }
             }
             else
             {
                 if (range_start < h.range_end)
                 {
+#if defined(OS_WIN)
+                    AddRange(jobs, h, h.range_start, max(h.range_end, range_end));
+#else
                     AddRange(jobs, h, h.range_start, std::max(h.range_end, range_end));
+#endif
                 }
                 else
                 {

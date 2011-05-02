@@ -2,7 +2,9 @@
 
 #include "types.h"
 #if defined(OS_POSIX)
-    #include <pthread.h>
+#   include <pthread.h>
+#elif defined(OS_WIN)
+#   include <windows.h>
 #endif
 
 namespace ext {
@@ -14,7 +16,7 @@ public:
     typedef void* Return;
     typedef void* Arg;
 #elif defined(OS_WIN)
-    typedef void* Handle;
+    typedef HANDLE Handle;
     typedef i32 Return;
     typedef void* Arg;
 #endif

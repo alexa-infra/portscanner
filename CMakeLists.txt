@@ -5,11 +5,18 @@ set(SRC_PATH ${portscanner_SOURCE_DIR})
 set(JSON_PATH ${SRC_PATH}/jsoncpp-src-0.5.0)
 set(JSON_SRC_PATH ${JSON_PATH}/src/lib_json)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_DEBUG -Werror")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_DEBUG")
 set(CMAKE_DEBUG_POSTFIX "_d")
 
 set(SRC ${SRC_PATH}/main.cpp
-        ${SRC_PATH}/data.cpp)
+        ${SRC_PATH}/data.h
+        ${SRC_PATH}/data.cpp
+        ${SRC_PATH}/app.h
+        ${SRC_PATH}/socket.h
+        ${SRC_PATH}/thread.h
+        ${SRC_PATH}/mutex.h
+        ${SRC_PATH}/types.h
+        ${SRC_PATH}/platform.h)
 set(JSON_SRC ${JSON_SRC_PATH}/json_reader.cpp
              ${JSON_SRC_PATH}/json_writer.cpp
              ${JSON_SRC_PATH}/json_internalarray.inl
@@ -23,13 +30,25 @@ if(UNIX)
         ${SRC_PATH}/socket_posix.cpp
     )
 endif(UNIX)
+if(WIN32)
+    list(APPEND SRC 
+        ${SRC_PATH}/mutex_win32.cpp
+        ${SRC_PATH}/thread_win32.cpp
+        ${SRC_PATH}/socket_win32.cpp
+        ${SRC_PATH}/stdint.h
+    )
+endif(WIN32)
 
 include_directories(
-#    ${TOOLS_PATH}
     ${SRC_PATH}
     ${JSON_PATH}/include
 )
 add_executable(pscan ${SRC} ${JSON_SRC})
 
-target_link_libraries(pscan pthread)
+if(UNIX)
+	target_link_libraries(pscan pthread)
+endif(UNIX)
 
+if(WIN32)
+	target_link_libraries(pscan ws2_32)
+endif(WIN32)

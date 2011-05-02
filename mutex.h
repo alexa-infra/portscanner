@@ -10,6 +10,7 @@
 
 namespace ext {
 
+//! Mutex object (CS for windows), used for scoped lock
 class Mutex {
 public:
 #if defined(OS_POSIX)
@@ -20,7 +21,9 @@ public:
     Mutex();
     ~Mutex();
 
+    //! Lock mutex (block current thread until mutex release by another thread)
     void lock();
+    //! Leave mutex
     void unlock();
 private:
     Handle handle_;

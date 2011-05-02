@@ -11,13 +11,11 @@ namespace ext {
 
 class Application {
 private:
-
-    JobList jobs;
-    Mutex mutex_queue;
-    Mutex mutex_output;
-    SocketConnector conn;
-    std::vector<Thread> thread_pool;
-
+    JobList jobs;               //!< List of current tasks
+    Mutex mutex_queue;          //!< Mutex for queue access
+    Mutex mutex_output;         //!< Mutex for console output
+    SocketConnector conn;       //!< Socket connector object
+    std::vector<Thread> thread_pool;    //!< Very simple pool of threads
 public:
     Application() {
         SocketConnector::Initialize();
@@ -26,14 +24,10 @@ public:
         SocketConnector::Shutdown();
     }
 public:
-    void put_job(ext::Host* host, u16 port, u32 timeout) {
-        ext::ScopedLock locker(mutex_queue);
-        ext::Job j;
-        j.host = host;
-        j.port = port;
-        j.timeout = timeout;
-        jobs.push(j);
-    }
+    //! Load job(task) from file, calculate rules, and perform port scan
+    //! (by given host-port-timeout), outputs success results to console
+    //! note: uses fixed number of threads, they are joined to current thread, and
+    //! current thread will wait until execution
     void run(const string& filename) {
         HostList ll;
         if (!ll.Parse("config.json"))
@@ -49,6 +43,8 @@ public:
             thread_pool[i].Join();
         }
     }
+    //! Worker method (single thread entry) - pops element from working queue,
+    //! and perform scan for specific host-port
     void worker() {
         ext::Job j;
         while(true) {

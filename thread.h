@@ -34,6 +34,20 @@ public:
 private:
     Handle handle_;
 
+public:
+    template<class T, void (T::*method)()>
+    static Thread StartThread(T* object) {
+        return Create(Entry<T, method>, reinterpret_cast<void*>(object));
+    }
+
+    template<class T, typename TT, void (T::*method)(TT*)>
+    static Thread StartThread(T* object, TT* arg) {
+        ThreadWithArg* helper = new ThreadWithArg(object, arg);
+        return Create(Entry<T, TT, method>, reinterpret_cast<void*>(helper));
+    }
+    void Join();
+
+private:
     template<class T, void (T::*method)()>
     static Return Entry(Arg obj) {
         T* object = reinterpret_cast<T*>(obj);
@@ -56,21 +70,6 @@ private:
     }
 
     static Thread Create(Function func, void* object);
-
-public:
-    template<class T, void (T::*method)()>
-    static Thread StartThread(T* object) {
-        return Create(Entry<T, method>, reinterpret_cast<void*>(object));
-    }
-
-    template<class T, typename TT, void (T::*method)(TT*)>
-    static Thread StartThread(T* object, TT* arg) {
-        ThreadWithArg* helper = new ThreadWithArg(object, arg);
-        return Create(Entry<T, TT, method>, reinterpret_cast<void*>(helper));
-    }
-    void Join();
-
-private:
     static Return Exit();
 };
 

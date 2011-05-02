@@ -33,6 +33,7 @@ public:
     const string& status() { return status_; }
     bool is_connected() const { return is_connected_; }
 
+    //! Perform connection to host-port by given timeout
     void TryConnect();
 };
 
@@ -43,6 +44,7 @@ public:
     SocketConnector() {}
     ~SocketConnector() {}
 
+    //! Scan host-port pair for connection
     bool TryConnect(Host* host, u16 port, i32 timeout) {
         Socket socket(host, port, timeout);
         socket.TryConnect();
@@ -52,8 +54,12 @@ public:
         return false;
     }
     const string& status() const { return status_; }
+
+    //! Resolves host
     static bool resolve(Host& host);
+    //! Initialization of socket layer
     static void Initialize();
+    //! Finalization of socket layer
     static void Shutdown();
 };
 

@@ -8,6 +8,9 @@ namespace ext {
 bool HostList::Parse(const string& filename) {
     std::fstream file;
     file.open(filename.c_str(), std::ios::in );
+    if (!file.is_open()) {
+        std::cout << "file " << filename << " is not existed" << std::endl;
+    }
     Json::Reader reader;
     Json::Value root;
     if (!reader.parse(file, root)) {

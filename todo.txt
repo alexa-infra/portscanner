@@ -1,12 +1,4 @@
 # unit-test ?
-# data struct - port/timeout
-#* json reader
-#* produce job list from data structure
-# open socket by using select
-# request port scan in main thread by cycle
-# output result to console
-# sync access to resources (console)
 # update windows build
-# commandline parser
 # interupt signals/events ?
 # help, docs

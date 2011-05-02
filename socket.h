@@ -39,12 +39,8 @@ class SocketConnector {
 private:
     string status_;
 public:
-    SocketConnector() {
-        Initialize();
-    }
-    ~SocketConnector() {
-        Shutdown();
-    }
+    SocketConnector() {}
+    ~SocketConnector() {}
 
     bool TryConnect(Host* host, u16 port, i32 timeout) {
         Socket socket(host, port, timeout);
@@ -56,9 +52,8 @@ public:
     }
     const string& status() const { return status_; }
     static bool resolve(Host& host);
-private:
-    void Initialize();
-    void Shutdown();
+    static void Initialize();
+    static void Shutdown();
 };
 
 } // namespace ext

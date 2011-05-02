@@ -53,19 +53,20 @@ private:
         return Exit();
     }
 
-    static bool Create(Function func, void* object);
+    static Thread Create(Function func, void* object);
 
 public:
     template<class T, void (T::*method)()>
-    static bool StartThread(T* object) {
+    static Thread StartThread(T* object) {
         return Create(Entry<T, method>, reinterpret_cast<void*>(object));
     }
 
     template<class T, typename TT, void (T::*method)(TT*)>
-    static bool StartThread(T* object, TT* arg) {
+    static Thread StartThread(T* object, TT* arg) {
         ThreadWithArg* helper = new ThreadWithArg(object, arg);
         return Create(Entry<T, TT, method>, reinterpret_cast<void*>(helper));
     }
+    void Join();
 
 private:
     static Return Exit();

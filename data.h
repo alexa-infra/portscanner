@@ -3,6 +3,7 @@
 #include "types.h"
 #include <map>
 #include <vector>
+#include <queue>
 
 namespace ext {
 
@@ -13,6 +14,7 @@ struct Job {
     u16 port;
     u32 timeout;
 };
+typedef std::queue<Job> JobList;
 
 struct Port {
     u16 number;

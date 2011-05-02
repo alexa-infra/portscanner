@@ -54,7 +54,6 @@ bool SocketConnector::resolve(Host& host)
     host.type = hptr->h_addrtype;
     if (hptr->h_addrtype == AF_INET) {
         host.resolved = new u8[4];
-        std::cout << hptr->h_length << std::endl;
         memcpy(host.resolved, hptr->h_addr, 4);
     } else if (hptr->h_addrtype == AF_INET6) {
         host.resolved = new u8[16];

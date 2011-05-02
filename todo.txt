@@ -1,7 +1,12 @@
 # cmake project
 # socket wrapper
+#* select
 # thread wrapper
+#* join
+#* mutex
 # threadpool ?
+#* vector of threads
+#* queue of tasks
 # unit-test ?
 # data struct - port/timeout
 # open socket by using select

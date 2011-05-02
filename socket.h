@@ -5,6 +5,8 @@
 #   include <windows.h>
 #endif
 
+#include "data.h"
+
 namespace ext {
 
 #if defined(OS_WIN)
@@ -16,16 +18,16 @@ namespace ext {
 class Socket {
 private:
     Handle socket_;
-    string host_;
+    Host* host_;
     u16 port_;
     string status_;
     bool is_connected_;
     u32 timeout_;
 public:
-    Socket(const string& host, u16 port, u32 timeout);
+    Socket(Host* host, u16 port, u32 timeout);
     ~Socket();
 
-    const string& host() const { return host_; }
+    const string& host() const { return host_->address; }
     u16 post() const { return port_; }
     const string& status() { return status_; }
     bool is_connected() const { return is_connected_; }
@@ -44,7 +46,7 @@ public:
         Shutdown();
     }
 
-    bool TryConnect(const string& host, u16 port, i32 timeout) {
+    bool TryConnect(Host* host, u16 port, i32 timeout) {
         Socket socket(host, port, timeout);
         socket.TryConnect();
         if (socket.is_connected())
@@ -53,6 +55,7 @@ public:
         return false;
     }
     const string& status() const { return status_; }
+    bool resolve(Host& host);
 private:
     void Initialize();
     void Shutdown();

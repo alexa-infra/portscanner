@@ -1,21 +1,25 @@
 #pragma once
 
 #include "types.h"
+#if defined(OS_POSIX)
+    #include <pthread.h>
+#endif
 
 namespace ext {
 
 class Thread {
 public:
 #if defined(OS_POSIX)
+    typedef pthread_t Handle;
     typedef void* Return;
     typedef void* Arg;
 #elif defined(OS_WIN)
+    typedef void* Handle;
     typedef i32 Return;
     typedef void* Arg;
 #endif
     typedef Return (*Function)(Arg);
 
-private:
     struct ThreadWithArg {
         void* object;
         void* arg;
@@ -25,6 +29,8 @@ private:
             , arg(a)
         {}
     };
+private:
+    Handle handle_;
 
     template<class T, void (T::*method)()>
     static Return Entry(Arg obj) {
@@ -47,7 +53,7 @@ private:
         return Exit();
     }
 
-    static bool Create(Function func, void* object) { return true; }
+    static bool Create(Function func, void* object);
 
 public:
     template<class T, void (T::*method)()>
@@ -62,7 +68,7 @@ public:
     }
 
 private:
-    static Return Exit() { return 0; }
+    static Return Exit();
 };
 
 }

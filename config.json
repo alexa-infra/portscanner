@@ -1,0 +1,16 @@
+{
+    timeout: 500, // default timeout, in ms
+    port_to_scan: { from: 1, to: 80 }, // default range of ports - will be scanned for all hosts
+    port_timeout: { // override default timeout for specific ports
+        80: 1000,   // port - timeout
+        143: 1000,
+    }
+    hosts: [ // array of pairs: address - host settings
+        "127.0.0.1": { 
+            port_timeout: { // override default timeout
+                80: 1000, // port - timeout
+            },
+            port_to_scan: { from: 80, to: 200 } // range of ports to scan
+        },
+    ]
+}

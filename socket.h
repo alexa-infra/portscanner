@@ -55,7 +55,7 @@ public:
         return false;
     }
     const string& status() const { return status_; }
-    bool resolve(Host& host);
+    static bool resolve(Host& host);
 private:
     void Initialize();
     void Shutdown();

@@ -4,6 +4,7 @@
 #include <map>
 #include <vector>
 #include <queue>
+#include "json/json.h"
 
 namespace ext {
 
@@ -16,31 +17,26 @@ struct Job {
 };
 typedef std::queue<Job> JobList;
 
-struct Port {
-    u16 number;
-    u32 timeout;
-    Port() : number(0), timeout(0) {}
-};
-
 struct Host {
     string address;
     i32 type;
-    u8* resolved;
+    u8 resolved[16];
     bool range_setted;
     u16 range_start;
     u16 range_end;
     u32 timeout;
-    std::vector<Port> port_list;
-    Host() : type(0), resolved(NULL), range_setted(false), range_start(0), range_end(0), timeout(0) {}
-    ~Host() {
-        if (resolved != NULL)
-            delete[] resolved;
-    }
+    std::map<u16, u32> port_timeouts;
+    Host() : type(0), range_setted(false), range_start(0), range_end(0), timeout(0) {}
+    virtual bool Parse(Json::Value& node);
 };
 
 struct HostList : public Host {
     std::map<string, Host> hosts;
     HostList() : Host() {}
+    bool Parse(const string& text);
+    bool Parse(Json::Value& node);;
+    JobList GenJobs();
+    void AddRange(JobList& jobs, Host& h, u16 start, u16 end);
 };
 
 } // namespace ext

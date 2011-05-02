@@ -8,14 +8,14 @@ set(JSON_SRC_PATH ${JSON_PATH}/src/lib_json)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_DEBUG -Werror")
 set(CMAKE_DEBUG_POSTFIX "_d")
 
-set(SRC ${SRC_PATH}/main.cpp)
+set(SRC ${SRC_PATH}/main.cpp
+        ${SRC_PATH}/data.cpp)
 set(JSON_SRC ${JSON_SRC_PATH}/json_reader.cpp
              ${JSON_SRC_PATH}/json_writer.cpp
              ${JSON_SRC_PATH}/json_internalarray.inl
              ${JSON_SRC_PATH}/json_value.cpp
              ${JSON_SRC_PATH}/json_internalmap.inl
              ${JSON_SRC_PATH}/json_valueiterator.inl)
-
 if(UNIX)
     list(APPEND SRC 
         ${SRC_PATH}/mutex_posix.cpp

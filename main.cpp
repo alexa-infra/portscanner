@@ -11,6 +11,7 @@ const u16 port_max = 65000;
 const u32 timeout = 200;
 
 class Test {
+public:
     ext::JobList jobs;
     ext::Mutex m;
     ext::SocketConnector conn;
@@ -35,24 +36,17 @@ public:
             }
 
             if (conn.TryConnect(j.host, j.port, j.timeout))
-                std::cout << j.port << " is ok" << std::endl;
+                std::cout << j.host->address << ":" << j.port << " is ok" << std::endl;
         }
     }
 };
 
 int main() {
-    ext::Mutex m;
     {
-        ext::ScopedLock locker(m);
+        ext::HostList ll;
+        ll.Parse("config.json");
         Test t;
-        ext::SocketConnector conn;
-        ext::Host h;
-        h.address = host;
-        if (!conn.resolve(h))
-            return -1;
-        for (int port=port_min; port<port_max; port++) {
-            t.put_job(&h, port, timeout);
-        }
+        t.jobs = ll.GenJobs();
         ext::Thread tt = ext::Thread::StartThread<Test, &Test::run>(&t);
         ext::Thread tt2 = ext::Thread::StartThread<Test, &Test::run>(&t);
 

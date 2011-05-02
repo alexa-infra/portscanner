@@ -40,8 +40,10 @@ void Socket::TryConnect() {
         memcpy(&sin.sin_addr, host_->resolved, 4);
     else if (host_->type == AF_INET6)
         memcpy(&sin.sin_addr, host_->resolved, 16);
+
     int flags = fcntl(socket_, F_GETFL, 0);
     fcntl(socket_, F_SETFL, flags | O_NONBLOCK);
+
     if (connect(socket_, (struct sockaddr *)&sin, sizeof(sin)) < 0)
     {
         if (errno != EINPROGRESS)
@@ -57,13 +59,12 @@ void Socket::TryConnect() {
     FD_SET(socket_, &fd_read);
 
     struct timeval tout;
-    tout.tv_sec = 0;
-    tout.tv_usec = timeout_;
+    tout.tv_sec = timeout_ / 1000;
+    tout.tv_usec = timeout_ % 1000;
     if (select(socket_ + 1, &fd_read, &fd_write, &fd_error, &tout) > 0)
     {
         if (FD_ISSET(socket_, &fd_error))
         {
-            std::cout << "error set" << std::endl;
             return;
         }
         if (FD_ISSET(socket_, &fd_read) ||
@@ -78,7 +79,6 @@ void Socket::TryConnect() {
             return;
         }
     }
-    std::cout << "select return -1 or 0" << std::endl;
 }
 
 void SocketConnector::Initialize() {}
@@ -92,10 +92,8 @@ bool SocketConnector::resolve(Host& host)
         return false;
     host.type = hptr->h_addrtype;
     if (hptr->h_addrtype == AF_INET) {
-        host.resolved = new u8[4];
         memcpy(host.resolved, hptr->h_addr, 4);
     } else if (hptr->h_addrtype == AF_INET6) {
-        host.resolved = new u8[16];
         memcpy(host.resolved, hptr->h_addr, 16);
     }
     return true;

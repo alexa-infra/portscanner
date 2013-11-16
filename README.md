@@ -1,0 +1,31 @@
+portscanner
+===========
+
+Simple tcp port scanner. Usage: 
+
+`pscan <Filename>`
+
+where Filename is a configuration file with the following format
+
+```
+{    
+    "timeout": 500, // default timeout, in ms
+    "port_to_scan": { "from": 1, "to": 80 }, // default range of ports - will be scanned for all hosts
+    "port_timeout": [ // override default timeout for specific ports
+        { "port": 80, "timeout": 1000 },   // port - timeout
+        { "port": 143, "timeout": 1000 }
+    ],
+    "hosts": { // array of pairs: address - host settings
+        "127.0.0.1": { 
+            "port_timeout": [ // override default timeout
+                { "port": 80, "timeout": 1000 } // port - timeout
+            ],
+            "port_to_scan": { "from": 80, "to": 200 } // range of ports to scan
+        },
+        "alexadotlife.com": {
+            "port_to_scan": { "from": 0, "to": 100 },
+            "timeout": 2000
+        }
+    }
+}
+```

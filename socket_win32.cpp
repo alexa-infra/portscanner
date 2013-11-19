@@ -14,7 +14,7 @@ Socket::Socket(Host* host, u16 port, u32 timeout)
     , host_(host)
     , port_(port)
     , status_("")
-    , is_connected_(false)
+    , isConnected_(false)
     , timeout_(timeout)
 {
     socket_ = ::WSASocket(host->type, SOCK_STREAM, IPPROTO_IP, NULL, 0, WSA_FLAG_OVERLAPPED); 
@@ -25,8 +25,8 @@ Socket::~Socket() {
         ::closesocket(socket_);
 }
 
-void Socket::TryConnect() {
-    is_connected_ = false;
+void Socket::tryConnect() {
+    isConnected_ = false;
     struct sockaddr_in sin;
     sin.sin_family = host_->type;
     sin.sin_port = htons(port_);
@@ -60,20 +60,20 @@ void Socket::TryConnect() {
     {
         if (FD_ISSET(socket_, &fd_read) || 
             FD_ISSET(socket_, &fd_write)) {
-            is_connected_ = true;
+            isConnected_ = true;
             return;
         }
     }
 }
 
-void SocketConnector::Initialize() {
+void SocketConnector::initialize() {
     WSADATA WSAData_;
     int result = WSAStartup(MAKEWORD(2,2), &WSAData_);
                 
     if (result != NO_ERROR)
         std::cout << "socket initialization error: " << WSAGetLastError() << std::endl;
 }
-void SocketConnector::Shutdown() {
+void SocketConnector::shutdown() {
     int result = WSACleanup();
     if (result != NO_ERROR)
         std::cout << "socket cleanup error: " << WSAGetLastError() << std::endl;

@@ -2,7 +2,7 @@
 
 namespace ext {
 
-Thread Thread::Create(Function func, void* object) {
+Thread Thread::create(Function func, void* object) {
     pthread_attr_t attr;
     pthread_attr_init(&attr);
     pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
@@ -14,11 +14,11 @@ Thread Thread::Create(Function func, void* object) {
     pthread_attr_destroy(&attr);
     return t;
 }
-Thread::Return Thread::Exit() {
+Thread::Return Thread::exit() {
     pthread_exit(NULL);
     return NULL;
 }
-void Thread::Join() {
+void Thread::join() {
     void *status;
     pthread_join(handle_, &status);
 }

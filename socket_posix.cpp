@@ -20,7 +20,7 @@ Socket::Socket(Host* host, u16 port, u32 timeout)
     , host_(host)
     , port_(port)
     , status_("")
-    , is_connected_(false)
+    , isConnected_(false)
     , timeout_(timeout)
 {
     socket_ = socket(host->type, SOCK_STREAM, IPPROTO_IP); 
@@ -31,8 +31,8 @@ Socket::~Socket() {
         close(socket_);
 }
 
-void Socket::TryConnect() {
-    is_connected_ = false;
+void Socket::tryConnect() {
+    isConnected_ = false;
     struct sockaddr_in sin;
     sin.sin_family = host_->type;
     sin.sin_port = htons(port_);
@@ -75,14 +75,14 @@ void Socket::TryConnect() {
                 return;
             if (error > 0)
                 return;
-            is_connected_ = true;
+            isConnected_ = true;
             return;
         }
     }
 }
 
-void SocketConnector::Initialize() {}
-void SocketConnector::Shutdown() {}
+void SocketConnector::initialize() {}
+void SocketConnector::shutdown() {}
 
 bool SocketConnector::resolve(Host& host)
 {

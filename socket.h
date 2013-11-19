@@ -10,20 +10,7 @@
 
 namespace ext {
 
-#if defined(OS_WIN)
-    typedef SOCKET Handle;
-#else
-    typedef int Handle;
-#endif
-
 class Socket {
-private:
-    Handle socket_;
-    Host* host_;
-    u16 port_;
-    string status_;
-    bool is_connected_;
-    u32 timeout_;
 public:
     Socket(Host* host, u16 port, u32 timeout);
     ~Socket();
@@ -31,36 +18,48 @@ public:
     const string& host() const { return host_->address; }
     u16 post() const { return port_; }
     const string& status() { return status_; }
-    bool is_connected() const { return is_connected_; }
+    bool isConnected() const { return isConnected_; }
 
     //! Perform connection to host-port by given timeout
-    void TryConnect();
+    void tryConnect();
+private:
+    #if defined(OS_WIN)
+        typedef SOCKET Handle;
+    #else
+        typedef int Handle;
+    #endif
+    Handle socket_;
+    Host* host_;
+    u16 port_;
+    string status_;
+    bool isConnected_;
+    u32 timeout_;
 };
 
 class SocketConnector {
-private:
-    string status_;
 public:
     SocketConnector() {}
     ~SocketConnector() {}
 
     //! Scan host-port pair for connection
-    bool TryConnect(Host* host, u16 port, i32 timeout) {
+    bool tryConnect(Host* host, u16 port, i32 timeout) {
         Socket socket(host, port, timeout);
-        socket.TryConnect();
-        if (socket.is_connected())
+        socket.tryConnect();
+        if (socket.isConnected())
             return true;
         status_ = socket.status();
         return false;
     }
     const string& status() const { return status_; }
-
+public:
     //! Resolves host
     static bool resolve(Host& host);
     //! Initialization of socket layer
-    static void Initialize();
+    static void initialize();
     //! Finalization of socket layer
-    static void Shutdown();
+    static void shutdown();
+private:
+    string status_;
 };
 
 } // namespace ext

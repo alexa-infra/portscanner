@@ -31,46 +31,46 @@ public:
             , arg(a)
         {}
     };
-private:
-    Handle handle_;
 
 public:
     template<class T, void (T::*method)()>
-    static Thread StartThread(T* object) {
-        return Create(Entry<T, method>, reinterpret_cast<void*>(object));
+    static Thread startThread(T* object) {
+        return create(entry<T, method>, reinterpret_cast<void*>(object));
     }
 
     template<class T, typename TT, void (T::*method)(TT*)>
-    static Thread StartThread(T* object, TT* arg) {
+    static Thread startThread(T* object, TT* arg) {
         ThreadWithArg* helper = new ThreadWithArg(object, arg);
-        return Create(Entry<T, TT, method>, reinterpret_cast<void*>(helper));
+        return create(entry<T, TT, method>, reinterpret_cast<void*>(helper));
     }
-    void Join();
+    void join();
 
 private:
     template<class T, void (T::*method)()>
-    static Return Entry(Arg obj) {
+    static Return entry(Arg obj) {
         T* object = reinterpret_cast<T*>(obj);
         if (object != NULL)
             (object->*method)();
-        return Exit();
+        return exit();
     }
 
     template<class T, typename TT, void (T::*method)(TT*)>
-    static Return Entry(Arg obj) {
+    static Return entry(Arg obj) {
         ThreadWithArg* helper = reinterpret_cast<ThreadWithArg*>(obj);
         if (helper == NULL)
-            return Exit();
+            return exit();
         T* object = reinterpret_cast<T*>(helper->object);
         TT* arg = reinterpret_cast<TT*>(helper->arg);
         if (object != NULL && arg != NULL)
             (object->*method)(arg);
         delete helper;
-        return Exit();
+        return exit();
     }
 
-    static Thread Create(Function func, void* object);
-    static Return Exit();
+    static Thread create(Function func, void* object);
+    static Return exit();
+private:
+    Handle handle_;
 };
 
 }

@@ -35,23 +35,25 @@ struct Host {
         , range_end(0)
         , timeout(0) {}
     //! Parses object from json node
-    virtual bool Parse(Json::Value& node);
+    bool parse(Json::Value& node);
 };
 
 //! List of host, note - it contains default values of Host class, it becomes global defaults
 struct HostList : public Host {
     std::map<string, Host> hosts;       //!< Named list of hosts
+    JobList jobs;
 
     HostList() : Host() {}
     
     //! Reads contant of file, and parse it to hosts structure
-    bool Parse(const string& filename);
+    bool parse(const string& filename);
     //! Parses object from json node
-    bool Parse(Json::Value& node);
-    //! Generate list of tasks for worker (final tuples host-port-timeout)
-    JobList GenJobs();
+    bool parse(Json::Value& node);
 private:
-    void AddRange(JobList& jobs, Host& h, u16 start, u16 end);
+    //! Generate list of tasks for worker (final tuples host-port-timeout)
+    void generateJobs();
+
+    void addRange(JobList& jobs, Host& h, u16 start, u16 end);
 };
 
 } // namespace ext

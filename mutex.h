@@ -30,7 +30,6 @@ private:
 };
 
 class ScopedLock {
-    Mutex& mutex_;
 public:
     ScopedLock(Mutex& mutex) : mutex_(mutex) {
         mutex_.lock();
@@ -38,6 +37,8 @@ public:
     ~ScopedLock() {
         mutex_.unlock();
     }
+private:
+    Mutex& mutex_;
 };
 
 } // namespace ext

@@ -6,29 +6,29 @@ namespace ext
 
 Application::Application()
 {
-    SocketConnector::Initialize();
+    SocketConnector::initialize();
 }
 
 Application::~Application()
 {
-    SocketConnector::Shutdown();
+    SocketConnector::shutdown();
 }
 
 void Application::run(const string& filename)
 {
     HostList hostList;
-    if (!hostList.Parse("config.json"))
+    if (!hostList.parse("config.json"))
         return;
-    jobs_ = hostList.GenJobs();
+    jobs_ = hostList.jobs;
 
     const i32 numThreads = 5;
     threadPool_.clear();
     for (int i=0; i<numThreads; i++) {
-        Thread tt = Thread::StartThread<Application, &Application::worker>(this);
+        Thread tt = Thread::startThread<Application, &Application::worker>(this);
         threadPool_.push_back(tt);
     }
     for (int i=0; i<numThreads; i++) {
-        threadPool_[i].Join();
+        threadPool_[i].join();
     }
 }
 
@@ -44,7 +44,7 @@ void Application::worker()
             jobs_.pop();
         }
         SocketConnector connection;
-        if (connection.TryConnect(job.host, job.port, job.timeout))
+        if (connection.tryConnect(job.host, job.port, job.timeout))
         {
             ScopedLock locker(mutexOutput_);
             std::cout << job.host->address << ":" << job.port << " is ok" << std::endl;

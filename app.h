@@ -5,6 +5,7 @@
 #include "types.h"
 #include "thread.h"
 #include "mutex.h"
+#include "data.h"
 
 namespace ext {
 

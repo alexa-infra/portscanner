@@ -12,7 +12,7 @@
 
 namespace ext {
 
-bool HostList::Parse(const string& filename) {
+bool HostList::parse(const string& filename) {
     std::fstream file;
     file.open(filename.c_str(), std::ios::in );
     if (!file.is_open()) {
@@ -26,11 +26,11 @@ bool HostList::Parse(const string& filename) {
         return false;
     }
     file.close();
-    return Parse(root);
+    return parse(root);
 }
 
-bool HostList::Parse(Json::Value& node) {
-    if (!Host::Parse(node))
+bool HostList::parse(Json::Value& node) {
+    if (!Host::parse(node))
         return false;
     Json::Value hosts_node = node.get("hosts", Json::Value::null);
     if (hosts_node == Json::Value::null) {
@@ -62,16 +62,17 @@ bool HostList::Parse(Json::Value& node) {
             std::cout << "Host node " << h.address << " is empty" << std::endl;
             return false;
         }
-        if (!h.Parse(hostNode)) {
+        if (!h.parse(hostNode)) {
             return false;
         }
         hosts[h.address] = h;
     }
+    generateJobs();
     return true;
 }
 
 
-bool Host::Parse(Json::Value& node) {
+bool Host::parse(Json::Value& node) {
     timeout = node.get("timeout", 0).asUInt();
     Json::Value rangeNode = node.get("port_to_scan", Json::Value::null);
     if (rangeNode == Json::Value::null)
@@ -113,9 +114,7 @@ bool Host::Parse(Json::Value& node) {
     return true;
 }
 
-JobList HostList::GenJobs() {
-    JobList jobs;
-
+void HostList::generateJobs() {
     for (std::map<string, Host>::iterator it = hosts.begin();
         it != hosts.end();
         ++it) {
@@ -127,42 +126,41 @@ JobList HostList::GenJobs() {
                 if (range_end < h.range_start)
                 {
                     // no intersection
-                    AddRange(jobs, h, range_start, range_end);
-                    AddRange(jobs, h, h.range_start, h.range_end);
+                    addRange(jobs, h, range_start, range_end);
+                    addRange(jobs, h, h.range_start, h.range_end);
                 }
                 else
                 {
                     // intersection or inclusion
-                    AddRange(jobs, h, range_start, std::max(h.range_end, range_end));
+                    addRange(jobs, h, range_start, std::max(h.range_end, range_end));
                 }
             }
             else
             {
                 if (range_start < h.range_end)
                 {
-                    AddRange(jobs, h, h.range_start, std::max(h.range_end, range_end));
+                    addRange(jobs, h, h.range_start, std::max(h.range_end, range_end));
                 }
                 else
                 {
                     // no intersection
-                    AddRange(jobs, h, range_start, range_end);
-                    AddRange(jobs, h, h.range_start, h.range_end);
+                    addRange(jobs, h, range_start, range_end);
+                    addRange(jobs, h, h.range_start, h.range_end);
                 }
             }
         }
         else if (h.range_setted)
         {
-            AddRange(jobs, h, h.range_start, h.range_end);
+            addRange(jobs, h, h.range_start, h.range_end);
         }
         else if (range_setted)
         {
-            AddRange(jobs, h, range_start, range_end);
+            addRange(jobs, h, range_start, range_end);
         }
     }
-    return jobs;
 }
 
-void HostList::AddRange(JobList& jobs, Host& h, u16 start, u16 end) {
+void HostList::addRange(JobList& jobs, Host& h, u16 start, u16 end) {
     for(u16 port=start; port<end; port++) {
         std::map<u16, u32>::iterator itr = h.port_timeouts.find(port);
         Job toAdd;

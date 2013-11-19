@@ -11,12 +11,14 @@ set(CMAKE_DEBUG_POSTFIX "_d")
 set(SRC ${SRC_PATH}/main.cpp
         ${SRC_PATH}/data.h
         ${SRC_PATH}/data.cpp
+        ${SRC_PATH}/app.cpp
         ${SRC_PATH}/app.h
         ${SRC_PATH}/socket.h
         ${SRC_PATH}/thread.h
         ${SRC_PATH}/mutex.h
         ${SRC_PATH}/types.h
         ${SRC_PATH}/platform.h)
+
 set(JSON_SRC ${JSON_SRC_PATH}/json_reader.cpp
              ${JSON_SRC_PATH}/json_writer.cpp
              ${JSON_SRC_PATH}/json_internalarray.inl

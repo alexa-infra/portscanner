@@ -3,6 +3,13 @@
 #include <fstream>
 #include "socket.h"
 
+#ifdef max
+    #undef max
+#endif
+#ifdef min
+    #undef min
+#endif
+
 namespace ext {
 
 bool HostList::Parse(const string& filename) {
@@ -126,22 +133,14 @@ JobList HostList::GenJobs() {
                 else
                 {
                     // intersection or inclusion
-#if defined(OS_WIN)
-                    AddRange(jobs, h, range_start, max(h.range_end, range_end));
-#else
                     AddRange(jobs, h, range_start, std::max(h.range_end, range_end));
-#endif
                 }
             }
             else
             {
                 if (range_start < h.range_end)
                 {
-#if defined(OS_WIN)
-                    AddRange(jobs, h, h.range_start, max(h.range_end, range_end));
-#else
                     AddRange(jobs, h, h.range_start, std::max(h.range_end, range_end));
-#endif
                 }
                 else
                 {

@@ -1,17 +1,12 @@
 #pragma once
 
 #include "platform.h"
+#include "pscan_config.h"
 
-#if !defined(NULL)
-#   define NULL 0
-#endif
-
-#if defined(OS_POSIX)
+#if defined(HAS_STDINT_H)
 #include <stdint.h>
-#elif defined(OS_WIN)
-#include "stdint.h"
 #else
-#error Include stdint.h
+#include "stdint.h"
 #endif
 
 typedef int8_t      i8;

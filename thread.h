@@ -1,7 +1,7 @@
 #pragma once
 
 #include "types.h"
-#if defined(OS_POSIX)
+#if defined(HAS_PTHREAD_H)
 #   include <pthread.h>
 #elif defined(OS_WIN)
 #   include <windows.h>
@@ -11,7 +11,7 @@ namespace ext {
 
 class Thread {
 public:
-#if defined(OS_POSIX)
+#if defined(HAS_PTHREAD_H)
     typedef pthread_t Handle;
     typedef void* Return;
     typedef void* Arg;

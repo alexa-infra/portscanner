@@ -1,7 +1,7 @@
 #pragma once
 
 #include "types.h"
-#if defined(OS_POSIX)
+#if defined(HAS_PTHREAD_H)
 #   include <pthread.h>
 #elif defined(OS_WIN)
 #   include <windows.h>
@@ -13,7 +13,7 @@ namespace ext {
 //! Mutex object (CS for windows), used for scoped lock
 class Mutex {
 public:
-#if defined(OS_POSIX)
+#if defined(HAS_PTHREAD_H)
     typedef pthread_mutex_t Handle;
 #elif defined(OS_WIN)
     typedef CRITICAL_SECTION Handle;

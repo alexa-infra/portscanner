@@ -1,0 +1,5 @@
+#pragma once
+
+#cmakedefine HAS_STDINT_H
+#cmakedefine HAS_PTHREAD_H
+

@@ -17,8 +17,9 @@ Application::~Application()
 void Application::run(const string& filename)
 {
     HostList hostList;
-    if (!hostList.parse("config.json"))
+    if (!hostList.parse(filename)) {
         return;
+    }
     jobs_ = hostList.jobs;
 
     const i32 numThreads = 5;
